@@ -16,7 +16,10 @@ class Customer(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
 
+    # Relationship with Review
     reviews = db.relationship('Review', back_populates='customer')
+
+    # Association proxy to access items directly through reviews
     items = association_proxy('reviews', 'item')
 
     # prevent recursion: exclude reviews.customer
@@ -33,6 +36,7 @@ class Item(db.Model, SerializerMixin):
     name = db.Column(db.String)
     price = db.Column(db.Float)
 
+    # Relationship with Review
     reviews = db.relationship('Review', back_populates='item')
 
     # prevent recursion: exclude reviews.item
@@ -50,6 +54,7 @@ class Review(db.Model, SerializerMixin):
     customer_id = db.Column(db.Integer, db.ForeignKey('customers.id'))
     item_id = db.Column(db.Integer, db.ForeignKey('items.id'))
 
+    # Relationships
     customer = db.relationship('Customer', back_populates='reviews')
     item = db.relationship('Item', back_populates='reviews')
 
